@@ -19,7 +19,7 @@ class MainController extends Controller
         return view('dashboard', compact('customers', 'menus', 'orders', 'orderItems'));
     }
 
-    // ===== CUSTOMER CRUD =====
+    //CUSTOMER CRUD 
     public function addCustomer(Request $req){
         Customer::create($req->all());
         return back()->with('success', 'Customer Added');
@@ -30,7 +30,7 @@ class MainController extends Controller
         return back()->with('success', 'Customer Deleted');
     }
 
-    // ===== MENU CRUD =====
+    //MENU CRUD 
     public function addMenu(Request $req) {
         Menu::create($req->all());
         return back()->with('success', 'Menu Item Added');
@@ -41,7 +41,7 @@ class MainController extends Controller
         return back()->with('success', 'Menu Item Deleted');
     }
 
-    // ===== ORDER CRUD =====
+    //ORDER CRUD 
    public function addOrder(Request $req)
 {
   
@@ -82,7 +82,7 @@ class MainController extends Controller
         return back()->with('success', 'Order Deleted');
     }
 
-    // ===== ORDER ITEM CRUD =====
+    //ORDER ITEM CRUD
     public function addOrderItem(Request $req){
         OrderItem::create($req->all());
         return back()->with('success', 'Order Item Added');
