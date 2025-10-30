@@ -16,7 +16,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    {{-- ========== CUSTOMERS TABLE ========== --}}
+    {{--  CUSTOMERS TABLE --}}
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">Customers</div>
         <div class="card-body">
@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    {{-- ========== MENUS TABLE ========== --}}
+    {{--  MENUS TABLE  --}}
     <div class="card mb-4">
         <div class="card-header bg-warning text-dark">Menu Items</div>
         <div class="card-body">
@@ -102,7 +102,7 @@
         </div>
     </div>
 
-    {{-- ========== ORDERS TABLE ========== --}}
+    {{--  ORDERS TABLE --}}
     <div class="card mb-4">
   <div class="card-header bg-warning text-dark">Create New Order</div>
   <div class="card-body">
@@ -138,7 +138,7 @@
   </div>
 </div>
 
-    {{-- ========== ORDER ITEMS TABLE ========== --}}
+    {{-- ORDER ITEMS TABLE  --}}
     <div class="card mb-4">
         <div class="card-header bg-info text-dark">Order Items</div>
         <div class="card-body">
