@@ -19,16 +19,6 @@ class MainController extends Controller
         return view('dashboard', compact('customers', 'menus', 'orders', 'orderItems'));
     }
 
-    //CUSTOMER CRUD 
-    public function addCustomer(Request $req){
-        Customer::create($req->all());
-        return back()->with('success', 'Customer Added');
-    }
-
-    public function deleteCustomer($id) {
-        Customer::destroy($id);
-        return back()->with('success', 'Customer Deleted');
-    }
 
     //MENU CRUD 
     public function addMenu(Request $req) {

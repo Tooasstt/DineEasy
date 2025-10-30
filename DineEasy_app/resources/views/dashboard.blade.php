@@ -16,48 +16,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    {{--  CUSTOMERS TABLE --}}
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">Customers</div>
-        <div class="card-body">
-            <form action="{{ route('customers.add') }}" method="POST" class="row g-2 mb-3">
-                @csrf
-                <div class="col"><input type="text" name="name" placeholder="Name" class="form-control" required></div>
-                <div class="col"><input type="text" name="address" placeholder="Address" class="form-control" required></div>
-                <div class="col"><input type="text" name="contact_number" placeholder="Contact Number" class="form-control" required></div>
-                <div class="col-auto"><button class="btn btn-success">Add</button></div>
-            </form>
-
-            <table class="table table-bordered table-striped">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Address</th>
-                        <th>Contact Number</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($customers as $c)
-                    <tr>
-                        <td>{{ $c->cust_id }}</td>
-                        <td>{{ $c->name }}</td>
-                        <td>{{ $c->address }}</td>
-                        <td>{{ $c->contact_number }}</td>
-                        <td>
-                            <form action="{{ route('customers.delete', $c->cust_id) }}" method="POST">
-                                @csrf
-                                <button class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-
+    
     {{--  MENUS TABLE  --}}
     <div class="card mb-4">
         <div class="card-header bg-warning text-dark">Menu Items</div>
@@ -185,4 +144,4 @@
 
 </div>
 </body>
-</html>
+</html> 
