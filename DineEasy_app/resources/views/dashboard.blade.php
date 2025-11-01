@@ -3,145 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DineEasy Dashboard</title>
-    @vite(['resources/css/app.css','resources/js/app.js']) 
+    <title>DineEasy Self-Order Kiosk</title>
+    @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
-<body class="bg-light">
+
+<body>
+<header>
+    DineEasy Self-Order Kiosk
+</header>
 
 <div class="container py-4">
-    <h1 class="mb-4 text-center">DineEasy Management Dashboard</h1>
 
-    {{-- SUCCESS MESSAGE --}}
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+   
+    <div class="order-summary">
+        <h2>Select Items</h2>
+
+        <form action="{{ route('orders.add') }}" method="POST">
+            @csrf
+
+           @foreach ($menus as $m)
+            <div class="d-flex align-items-center mb-2">
+            <input type="checkbox" name="menu_id[]" value="{{ $m->menu_id }}" class="form-check-input me-2" style="transform: scale(1.3);">
+
+            <label class="me-2" style="min-width:200px;">
+            {{ $m->item_name }} — ₱{{ number_format($m->price,2) }}
+            </label>
+
+            <input type="number"
+             name="quantity[]"
+            class="qty-input form-control ms-3"
+            data-price="{{ $m->price }}"
+             placeholder="0"
+             min="0"
+             style="width:80px;">
+           </div>
+            @endforeach
+
+            <hr>
+
+            <h3>Total: ₱<span id="orderTotal">0.00</span></h3>
+
+            <button type="submit" class="add-btn">Place Order </button>
+        </form>
+    </div>
+
     
-    {{--  MENUS TABLE  --}}
-    <div class="card mb-4">
-        <div class="card-header bg-warning text-dark">Menu Items</div>
-        <div class="card-body">
-            <form action="{{ route('menus.add') }}" method="POST" class="row g-2 mb-3">
-                @csrf
-                <div class="col"><input type="text" name="item_name" placeholder="Item Name" class="form-control" required></div>
-                <div class="col"><input type="text" name="description" placeholder="Description" class="form-control"></div>
-                <div class="col"><input type="number" step="0.01" name="price" placeholder="Price" class="form-control" required></div>
-                <div class="col-auto"><button class="btn btn-success">Add</button></div>
-            </form>
+    <div class="order-summary">
+        <h2>Recent Orders</h2>
 
-            <table class="table table-bordered table-striped">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>ID</th>
-                        <th>Item Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Availability</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($menus as $m)
-                    <tr>
-                        <td>{{ $m->menu_id }}</td>
-                        <td>{{ $m->item_name }}</td>
-                        <td>{{ $m->description }}</td>
-                        <td>₱{{ $m->price }}</td>
-                        <td>{{ $m->availability ? 'Available' : 'Unavailable' }}</td>
-                        <td>
-                            <form action="{{ route('menus.delete', $m->menu_id) }}" method="POST">
-                                @csrf
-                                <button class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+@foreach($orders as $order)
+<tr>
+    <td>{{ $order->orders_id }}</td>
+    <td>
+        @forelse($order->orderItems as $item)
+            {{ $item->menu->item_name ?? 'Unknown Item' }} × {{ $item->quantity }}<br>
+        @empty
+            —
+        @endforelse
+    </td>
+    <td>₱{{ number_format($order->total_price, 2) }}</td>
+    <td>{{ ucfirst($order->status) }}</td>
+    <td>
+        <form action="{{ route('orders.delete', $order->orders_id) }}" method="POST">
+            @csrf
+            <button class="payment-btn">Delete</button>
+        </form>
+    </td>
+</tr>
+@endforeach
 
-    {{--  ORDERS TABLE --}}
-    <div class="card mb-4">
-  <div class="card-header bg-warning text-dark">Create New Order</div>
-  <div class="card-body">
-    <form action="{{ route('orders.add') }}" method="POST">
-      @csrf
-
-      <div class="mb-2">
-        <label>Customer:</label>
-        <select name="customer_id" class="form-control" required>
-          <option value="">-- Select Customer --</option>
-          @foreach ($customers as $c)
-            <option value="{{ $c->cust_id }}">{{ $c->name }}</option>
-          @endforeach
-        </select>
-      </div>
-
-     <form action="{{ route('orders.add') }}" method="POST">
-    @csrf
-
-    <div class="mb-3">
-        <label>Menu Items:</label><br>
-        @foreach ($menus as $m)
-            <div class="d-flex align-items-center mb-1">
-                <input type="checkbox" name="menu_id[]" value="{{ $m->menu_id }}">
-                <span class="ms-2">{{ $m->item_name }} (₱{{ $m->price }})</span>
-                <input type="number" name="quantity[]" class="form-control ms-3" placeholder="Qty" min="1" style="width: 80px;">
-            </div>
-        @endforeach
-    </div>
-
-    <button type="submit" class="btn btn-primary">Add Order</button>
-</form>
-  </div>
-</div>
-
-    {{-- ORDER ITEMS TABLE  --}}
-    <div class="card mb-4">
-        <div class="card-header bg-info text-dark">Order Items</div>
-        <div class="card-body">
-            <form action="{{ route('orderitems.add') }}" method="POST" class="row g-2 mb-3">
-                @csrf
-                <div class="col"><input type="number" name="order_id" placeholder="Order ID" class="form-control" required></div>
-                <div class="col"><input type="number" name="menu_id" placeholder="Menu ID" class="form-control" required></div>
-                <div class="col"><input type="number" name="quantity" placeholder="Quantity" class="form-control" required></div>
-                <div class="col"><input type="number" step="0.01" name="subtotal" placeholder="Subtotal" class="form-control"></div>
-                <div class="col-auto"><button class="btn btn-success">Add</button></div>
-            </form>
-
-            <table class="table table-bordered table-striped">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>ID</th>
-                        <th>Order</th>
-                        <th>Menu</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($orderItems as $oi)
-                    <tr>
-                        <td>{{ $oi->order_item_id }}</td>
-                        <td>{{ $oi->order_id }}</td>
-                        <td>{{ $oi->menu ? $oi->menu->item_name : 'N/A' }}</td>
-                        <td>{{ $oi->quantity }}</td>
-                        <td>₱{{ $oi->subtotal }}</td>
-                        <td>
-                            <form action="{{ route('orderitems.delete', $oi->order_item_id) }}" method="POST">
-                                @csrf
-                                <button class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+        </table>
     </div>
 
 </div>
+
+<footer>
+    © 2025 DineEasy - Walk-In Ordering System
+</footer>
+
+<script>
+document.querySelectorAll('.qty-input').forEach(input => {
+    input.addEventListener('input', calculateTotal);
+});
+
+function calculateTotal() {
+    let total = 0;
+    document.querySelectorAll('.qty-input').forEach(input => {
+        const price = parseFloat(input.dataset.price);
+        const qty = parseInt(input.value) || 0;
+        total += price * qty;
+    });
+
+    document.getElementById('orderTotal').textContent = total.toFixed(2);
+}
+</script>
+
 </body>
-</html> 
+</html>

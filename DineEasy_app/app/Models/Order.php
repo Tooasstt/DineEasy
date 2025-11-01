@@ -11,20 +11,7 @@ class Order extends Model
 
     protected $table = 'orders';
     protected $primaryKey = 'orders_id';
-    public $incrementing = true;
-    protected $keyType = 'int';
-
-    protected $fillable = [
-        'customer_id',
-        'status',
-        'total_price',
-    ];
-
-   
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class, 'customer_id', 'cust_id');
-    }
+    protected $fillable = ['customer_id', 'status', 'total_price'];
 
     public function orderItems()
     {

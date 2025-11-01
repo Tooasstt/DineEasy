@@ -10,15 +10,17 @@ use App\Models\OrderItem;
 
 class MainController extends Controller
 {
-    // Show dashboard
+   
     public function index(){
-        $customers = Customer::all();
-        $menus = Menu::all();
-        $orders = Order::with('customer')->get();
-        $orderItems = OrderItem::with(['order', 'menu'])->get();
-        return view('dashboard', compact('customers', 'menus', 'orders', 'orderItems'));
-    }
+    $menus = Menu::all();
 
+    $orders = Order::with(['orderItems.menu'])
+    ->orderBy('orders_id', 'DESC')
+    ->get();
+
+    return view('dashboard', compact('menus', 'orders'));
+
+    }
 
     //MENU CRUD 
     public function addMenu(Request $req) {
@@ -32,44 +34,47 @@ class MainController extends Controller
     }
 
     //ORDER CRUD 
-   public function addOrder(Request $req)
-{
-  
+   public function addOrder(Request $req){
+    $customerId = $req->customer_id ?? null; 
+
     $order = Order::create([
-        'customer_id' => $req->customer_id,
+        'customer_id' => $customerId,
         'status' => 'pending',
         'total_price' => 0,
     ]);
 
-    $orderId = $order->orders_id; 
     $total = 0;
 
-    
-    if ($req->menu_id && is_array($req->menu_id)) {
+    if ($req->menu_id) {
         foreach ($req->menu_id as $index => $menuId) {
-            $menu = Menu::find($menuId);
-            $qty = $req->quantity[$index];
-            $subtotal = $menu->price * $qty;
+            if ($req->quantity[$index] > 0) {
+                $menu = Menu::find($menuId);
+                $qty = $req->quantity[$index];
+                $subtotal = $menu->price * $qty;
 
-            OrderItem::create([
-                'order_id' => $orderId,
-                'menu_id' => $menuId,
-                'quantity' => $qty,
-                'subtotal' => $subtotal,
-            ]);
+                OrderItem::create([
+                    'order_id' => $order->orders_id, 
+                    'menu_id' => $menuId,
+                    'quantity' => $qty,
+                    'subtotal' => $subtotal,
+                ]);
 
-            $total += $subtotal;
+                $total += $subtotal;
+            }
         }
     }
 
     $order->update(['total_price' => $total]);
 
     return back()->with('success', 'Order Created');
-}
+    }
 
-    public function deleteOrder($id)  {
-        Order::destroy($id);
-        return back()->with('success', 'Order Deleted');
+    public function deleteOrder($id){
+    \App\Models\OrderItem::where('order_id', $id)->delete();
+
+    Order::destroy($id);
+
+    return back()->with('success', 'Order Deleted');
     }
 
     //ORDER ITEM CRUD
@@ -83,4 +88,5 @@ class MainController extends Controller
         OrderItem::destroy($id);
         return back()->with('success', 'Order Item Deleted');
     }
+ 
 }
