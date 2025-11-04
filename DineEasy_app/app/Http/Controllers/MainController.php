@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Customer;
 use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -38,7 +37,6 @@ class MainController extends Controller
     $customerId = $req->customer_id ?? null; 
 
     $order = Order::create([
-        'customer_id' => $customerId,
         'status' => 'pending',
         'total_price' => 0,
     ]);

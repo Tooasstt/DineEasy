@@ -11,7 +11,11 @@
 <header>
     DineEasy Self-Order Kiosk
 </header>
-
+@if(session('success'))
+<script>
+    alert("✅ Order Placed Successfully!");
+</script>
+@endif
 <div class="container py-4">
 
     @if(session('success'))
