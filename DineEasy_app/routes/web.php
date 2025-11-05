@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\AdminController;
+
+// Admin / Login page
+Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.login.page');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login');
 
 // Kiosk / POS page
 Route::get('/', [MainController::class, 'index'])->name('dashboard');
