@@ -44,22 +44,25 @@ class MainController extends Controller
     $total = 0;
 
     if ($req->menu_id) {
-        foreach ($req->menu_id as $index => $menuId) {
-            if ($req->quantity[$index] > 0) {
-                $menu = Menu::find($menuId);
-                $qty = $req->quantity[$index];
-                $subtotal = $menu->price * $qty;
+        foreach ($req->quantity as $menuId => $qty) {
+         if ($qty > 0) {
+        $menu = Menu::find($menuId);
+        $notes = $req->notes[$menuId] ?? null;
 
-                OrderItem::create([
-                    'order_id' => $order->orders_id, 
-                    'menu_id' => $menuId,
-                    'quantity' => $qty,
-                    'subtotal' => $subtotal,
-                ]);
+        $subtotal = $menu->price * $qty;
 
-                $total += $subtotal;
-            }
+        OrderItem::create([
+            'order_id' => $order->orders_id,
+            'menu_id' => $menuId,
+            'quantity' => $qty,
+            'subtotal' => $subtotal,
+            'notes' => $notes
+        ]);
+
+            $total += $subtotal;
+         }
         }
+
     }
 
     $order->update(['total_price' => $total]);
@@ -86,5 +89,27 @@ class MainController extends Controller
         OrderItem::destroy($id);
         return back()->with('success', 'Order Item Deleted');
     }
- 
+    public function updateOrder(Request $req, $id)
+{
+    $order = Order::find($id);
+    $total = 0;
+
+    foreach ($req->quantity as $itemId => $qty) {
+        $orderItem = OrderItem::find($itemId);
+
+        if ($orderItem) {
+            $orderItem->quantity = $qty;
+            $orderItem->notes = $req->notes[$itemId] ?? null;
+            $orderItem->subtotal = $orderItem->menu->price * $qty;
+            $orderItem->save();
+            $total += $orderItem->subtotal;
+        }
+    }
+
+    $order->update(['total_price' => $total]);
+
+    return back()->with('success', 'Order Updated Successfully!');
+}
+
+
 }
