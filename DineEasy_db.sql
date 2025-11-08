@@ -56,6 +56,7 @@ CREATE TABLE `menus` (
   `menu_id` int NOT NULL AUTO_INCREMENT,
   `item_name` varchar(45) NOT NULL,
   `description` text,
+  `image` varchar(255) DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
   `availability` tinyint NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -70,7 +71,7 @@ CREATE TABLE `menus` (
 
 LOCK TABLES `menus` WRITE;
 /*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-INSERT INTO `menus` VALUES (1,'Cheeseburger','Classic beef burger with cheese',89.00,1,'2025-10-17 23:50:13',NULL),(2,'Fries','Crispy golden fries',45.00,1,'2025-10-17 23:50:13',NULL),(3,'Iced Tea','Refreshing drink',30.00,1,'2025-10-17 23:50:13',NULL);
+INSERT INTO `menus` VALUES (1,'Cheeseburger','Classic beef burger with cheese','burger.jpg',89.00,1,'2025-10-17 23:50:13',NULL),(2,'Fries','Crispy golden fries','fries.jpg',45.00,1,'2025-10-17 23:50:13',NULL),(3,'Iced Tea','Refreshing drink','icedtea.jpg',30.00,1,'2025-10-17 23:50:13',NULL);
 /*!40000 ALTER TABLE `menus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,12 +90,13 @@ CREATE TABLE `order_items` (
   `menu_id` int NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
+  `notes` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`order_item_id`),
   KEY `order_idx` (`order_id`),
   KEY `menu_idx` (`menu_id`),
   CONSTRAINT `menu` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`menu_id`),
   CONSTRAINT `order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`orders_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,6 +105,7 @@ CREATE TABLE `order_items` (
 
 LOCK TABLES `order_items` WRITE;
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
+INSERT INTO `order_items` VALUES (51,53,1,89.00,1,'2025-11-07 17:50:19','2025-11-07 17:50:19',NULL),(52,53,1,45.00,2,'2025-11-07 17:50:19','2025-11-07 17:50:19',NULL),(53,53,1,30.00,3,'2025-11-07 17:50:19','2025-11-07 17:50:19',NULL);
 /*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,7 +123,7 @@ CREATE TABLE `orders` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`orders_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,6 +132,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (53,'pending',164.00,'2025-11-07 17:50:19','2025-11-07 17:50:19');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,4 +175,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-04 19:01:37
+-- Dump completed on 2025-11-08  8:38:59
