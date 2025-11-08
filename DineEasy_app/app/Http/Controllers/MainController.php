@@ -140,7 +140,7 @@ public function toggleAvailability($id)
     $menu = Menu::find($id);
 
     if ($menu) {
-        // Toggle between 1 and 0
+      
         $menu->availability = $menu->availability == 1 ? 0 : 1;
         $menu->save();
     }

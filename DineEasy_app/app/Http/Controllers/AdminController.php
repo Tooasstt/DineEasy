@@ -29,7 +29,7 @@ public function login(Request $req)
 }
 public function dashboard()
 {
-    $menus = \App\Models\Menu::all(); // fetch all menu items
+    $menus = \App\Models\Menu::all(); 
     return view('admindashboard', compact('menus'));
 }
 
