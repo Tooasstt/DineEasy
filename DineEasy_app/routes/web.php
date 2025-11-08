@@ -36,13 +36,13 @@ Route::get('/api/order/{id}', function ($id) {
     return response()->json(['items' => $items]);
 });
 
-
 Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
 
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-Route::group(['middleware' => 'admin.auth'], function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
-});
+Route::post('/menus/toggle/{id}', [MainController::class, 'toggleAvailability'])->name('menus.toggle');
+Route::post('/menus/update/{id}', [MainController::class, 'updateMenu'])->name('menus.update');
+Route::post('/admin/menu/update/{id}', [AdminController::class, 'updateMenu'])->name('admin.menu.update');
 

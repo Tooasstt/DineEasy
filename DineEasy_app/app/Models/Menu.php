@@ -13,12 +13,13 @@ class Menu extends Model
     protected $primaryKey = 'menu_id';
     public $timestamps = true;
 
-    protected $fillable = [
-        'item_name', 
-        'description', 
-        'price', 
-        'availability'
-    ];
+   protected $fillable = [
+    'item_name',
+    'description',
+    'price',
+    'image',
+    'availability'
+];
 
     public function orderItems()
     {

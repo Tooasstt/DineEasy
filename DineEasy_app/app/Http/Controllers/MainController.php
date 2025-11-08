@@ -11,8 +11,7 @@ class MainController extends Controller
 {
    
     public function index(){
-    $menus = Menu::all();
-
+    $menus = Menu::where('availability', 1)->get();
     $orders = Order::with(['orderItems.menu'])
     ->orderBy('orders_id', 'DESC')
     ->get();
@@ -22,15 +21,41 @@ class MainController extends Controller
     }
 
     //MENU CRUD 
-    public function addMenu(Request $req) {
-        Menu::create($req->all());
-        return back()->with('success', 'Menu Item Added');
+   public function addMenu(Request $req)
+{
+    $data = $req->only(['item_name', 'description', 'price']);
+
+    $data['availability'] = 1;
+
+    if ($req->hasFile('image')) {
+        $filename = time() . '_' . $req->image->getClientOriginalName();
+        $req->image->move(public_path('images/menu'), $filename);
+        $data['image'] = $filename;
+    } else {
+        $data['image'] = null;
     }
 
-    public function deleteMenu($id)  {
-        Menu::destroy($id);
-        return back()->with('success', 'Menu Item Deleted');
+    Menu::create($data);
+
+    return back()->with('success', 'Menu Item Added');
+}
+
+   public function deleteMenu($id)
+{
+    $menu = Menu::find($id);
+
+    if ($menu) {
+        //  Delete image from folder
+        if ($menu->image && file_exists(public_path('images/menu/' . $menu->image))) {
+            unlink(public_path('images/menu/' . $menu->image));
+        }
+
+        $menu->delete();
     }
+
+    return back()->with('success', 'Menu Item Deleted');
+}
+
 
     //ORDER CRUD 
    public function addOrder(Request $req){
@@ -109,6 +134,18 @@ class MainController extends Controller
     $order->update(['total_price' => $total]);
 
     return back()->with('success', 'Order Updated Successfully!');
+}
+public function toggleAvailability($id)
+{
+    $menu = Menu::find($id);
+
+    if ($menu) {
+        // Toggle between 1 and 0
+        $menu->availability = $menu->availability == 1 ? 0 : 1;
+        $menu->save();
+    }
+
+    return back()->with('success', 'Availability Updated');
 }
 
 

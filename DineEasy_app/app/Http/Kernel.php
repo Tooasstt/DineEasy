@@ -44,9 +44,10 @@ class Kernel extends HttpKernel
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-    // ✅ Your custom middleware
+    // ✅ THIS is what was missing
     'admin.auth' => \App\Http\Middleware\AdminAuth::class,
-];
+    ];
+
 
 
 }

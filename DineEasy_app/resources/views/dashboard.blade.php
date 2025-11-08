@@ -7,21 +7,30 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 
-<body>
-<header style="
-    text-align:center; 
-    padding:15px 0;">
+
+<div style="
+    background: linear-gradient(135deg, #5c4fd7, #7361f2);
+    text-align:center;
+    padding: 20px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);  
+">
+    
     <img src="{{ asset('images/DineEasyLogo.png') }}" 
          alt="DineEasy Logo" 
-         style="height:160px; display:block; margin:0 auto;">
+         style="height:180px; margin:0 auto; display:block;">
+
     <h1 style="
-        margin-top:5px; 
-        font-size:40px; 
-        font-weight:700;
-        color:#fff;">
+        margin: 0;
+        margin-top: 5px;
+        font-size: 36px;
+        font-weight: 700;
+        color: #fff;">
         Self-Order Kiosk
     </h1>
-</header>
+
+</div>
+
+
 
 
 <div class="container py-4">

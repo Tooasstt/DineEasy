@@ -10,25 +10,30 @@ class AdminController extends Controller {
         return view('admin_login');
     }
 
-    public function login(Request $r) {
-        $user = DB::table('users')
-            ->where('email',$r->email)
-            ->where('password',$r->password)
-            ->first();
-        if(!$user) return back()->with('error','Invalid credentials');
-        session(['admin'=>$user]);
+public function login(Request $req)
+{
+    if ($req->email == 'admin@dineeasy.com' && $req->password == '12345') {
+        session(['admin_logged_in' => true]);
         return redirect()->route('admin.dashboard');
     }
 
-    public function logout() {
-        session()->forget('admin');
-        return redirect('/');
-    }
+    return back()->with('error', 'Invalid credentials');
+}
 
-    public function dashboard() {
-        $menus = Menu::all();
-        return view('admin_dashboard',compact('menus'));
-    }
+
+
+   public function logout()
+{
+    session()->forget('admin_logged_in');
+    return redirect()->route('admin.login');
+}
+public function dashboard()
+{
+    $menus = \App\Models\Menu::all(); // fetch all menu items
+    return view('admindashboard', compact('menus'));
+}
+
+
 
     public function addMenu(Request $r) {
         $img=null;
@@ -45,23 +50,31 @@ class AdminController extends Controller {
         return back()->with('success','Item added');
     }
 
-    public function updateMenu(Request $r,$id) {
-        $m=Menu::find($id);
-        if(!$m) return back();
-        if($r->hasFile('image')){
-            $img=time().'.'.$r->image->extension();
-            $r->image->move(public_path('images'),$img);
-            $m->image=$img;
-        }
-        $m->item_name=$r->item_name;
-        $m->description=$r->description;
-        $m->price=$r->price;
-        $m->save();
-        return back()->with('success','Item updated');
+   
+    public function updateMenu(Request $req, $id){
+    $menu = Menu::find($id);
+
+    if (!$menu) return back()->with('error', 'Menu not found');
+
+    $menu->item_name = $req->item_name;
+    $menu->description = $req->description;
+    $menu->price = $req->price;
+
+    if ($req->hasFile('image')) {
+        $filename = time() . '_' . $req->image->getClientOriginalName();
+        $req->image->move(public_path('images/menu'), $filename);
+        $menu->image = $filename;
+    }
+
+    $menu->save();
+
+    return back()->with('success', 'Menu Updated Successfully');
     }
 
     public function deleteMenu($id){
         Menu::destroy($id);
         return back()->with('success','Item deleted');
     }
+
+
 }
