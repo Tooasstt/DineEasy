@@ -58,11 +58,11 @@ CREATE TABLE `menus` (
   `description` text,
   `image` varchar(255) DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
-  `availability` tinyint NOT NULL,
+  `availability` int DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,7 +105,6 @@ CREATE TABLE `order_items` (
 
 LOCK TABLES `order_items` WRITE;
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
-INSERT INTO `order_items` VALUES (51,53,1,89.00,1,'2025-11-07 17:50:19','2025-11-07 17:50:19',NULL),(52,53,1,45.00,2,'2025-11-07 17:50:19','2025-11-07 17:50:19',NULL),(53,53,1,30.00,3,'2025-11-07 17:50:19','2025-11-07 17:50:19',NULL);
 /*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -132,7 +131,6 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (53,'pending',164.00,'2025-11-07 17:50:19','2025-11-07 17:50:19');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -175,4 +173,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-08  8:38:59
+-- Dump completed on 2025-11-08 11:07:40
